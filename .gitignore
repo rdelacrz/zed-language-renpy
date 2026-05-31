@@ -1,0 +1,54 @@
+# OS / editor clutter
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Node / JS toolchain
+node_modules/
+node_modules/*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+npm-debug.log*
+
+# Build / cache outputs
+dist/
+build/
+out/
+coverage/
+.cache/
+
+# C / parser build artifacts
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dylib
+*.dll
+*.exe
+*.wasm
+*.node
+
+# Tree-sitter / generated parser artifacts
+/tree-sitter-renpy/build/
+/tree-sitter-renpy/bin/
+/tree-sitter-renpy/lib/
+/tree-sitter-renpy/node_modules
+/tree-sitter-renpy/node_modules/*
+/tree-sitter-renpy/target/
+/tree-sitter-renpy/*.o
+/tree-sitter-renpy/*.so
+/tree-sitter-renpy/*.dylib
+/tree-sitter-renpy/*.dll
+/tree-sitter-renpy/*.a
+/tree-sitter-renpy/*.wasm
+
+# If any temporary parser outputs get created elsewhere
+*.generated.c
+*.generated.h

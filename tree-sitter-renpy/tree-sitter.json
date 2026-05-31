@@ -1,0 +1,38 @@
+{
+  "grammars": [
+    {
+      "name": "renpy",
+      "camelcase": "Renpy",
+      "scope": "source.renpy",
+      "path": ".",
+      "file-types": [
+        "rpy",
+        "rpym",
+        "rpymc",
+        "rpyc"
+      ],
+      "injection-regex": "^(renpy|rpy)$"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "Tree-sitter grammar for Ren'Py",
+    "authors": [
+      {
+        "name": "Ren'Py Zed Extension Contributors"
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/user/zed-language-renpy"
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": true,
+    "node": true,
+    "python": true,
+    "rust": true,
+    "swift": false
+  }
+}

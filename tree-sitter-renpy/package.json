@@ -1,0 +1,18 @@
+{
+  "name": "tree-sitter-renpy",
+  "version": "0.1.0",
+  "description": "Tree-sitter grammar for Ren'Py.",
+  "license": "MIT",
+  "keywords": [
+    "tree-sitter",
+    "renpy"
+  ],
+  "main": "grammar.js",
+  "scripts": {
+    "generate": "tree-sitter generate",
+    "test": "node test.js"
+  },
+  "devDependencies": {
+    "tree-sitter-cli": "^0.25.10"
+  }
+}

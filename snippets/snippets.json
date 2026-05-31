@@ -309,11 +309,6 @@
     "body": "{w=${1:wait time}}",
     "description": "Wait time Tag"
   },
-  "Ren'Py Docs": {
-    "prefix": "dochelp",
-    "body": "## Visit the site for documentation or help of Ren'Py engine. ##\n## Documentation:\n\t\"${1:http://www.renpy.org/doc/html/}\"\n## Wiki-Old Documentation:\n\t\"${2:http://www.renpy.org/wiki/renpy/Wiki_Home_Page}\"\n## Forum:\n\t\"${3:http://lemmasoft.renai.us/forums/viewforum.php?f=42}\"\n## Extension Documentation:\n\t\"${4:https://github.com/LuqueDaniel/vscode-language-renpy}\"",
-    "description": "Show docs/useful urls"
-  },
   "Assert Equal": {
     "prefix": ",ase",
     "body": "self.assertEqual(${1:expected}, ${2:actual}${3:, '${4:message}'})$0",

@@ -9,10 +9,24 @@ license = "MIT"
 
 [grammars.renpy]
 repository = "file://tree-sitter-renpy"
-commit = "HEAD"
+rev = "HEAD"
 
 [languages.renpy]
 scope = "source.renpy"
 path_suffixes = ["rpy", "rpym", "rpymc", "rpyc"]
 
 snippets = ["./snippets/snippets.json"]
+
+# Backend parity is intentionally scoped down for now.
+# Tree-sitter/config handles syntax, snippets, and basic structure.
+# Rust/WASM should only be added once a shared index is needed for completion,
+# definition, or diagnostics parity.
+
+[backend]
+# Path (relative to the extension root) where the Rust backend will write a
+# compact navigation index for JS/TS to consume as a safe fallback. The
+# `refresh_navigation_index` function updates this file when a navigation.json
+# is present in the workspace. JS/TS may also call the slash command
+# `renpy.refresh_index` (if registered by the host) to request an on-demand
+# refresh.
+index_path = "./.internal/navigation_index.json"

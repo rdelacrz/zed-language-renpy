@@ -1,0 +1,52 @@
+{
+  "navigation": {
+    "name": "sample-renpy-workspace",
+    "version": "1",
+    "labels": ["start", "chapter_1"],
+    "screens": ["main_menu", "preferences"],
+    "transforms": ["fade_in"],
+    "audio": ["music_theme"],
+    "config_keys": ["window_title"],
+    "renpy_keys": ["define", "image"],
+    "gui_keys": ["text_size"]
+  },
+  "definitions": [
+    {
+      "kind": "label",
+      "name": "start",
+      "file": "game/script.rpy",
+      "line": 3,
+      "column": 0
+    },
+    {
+      "kind": "screen",
+      "name": "main_menu",
+      "file": "game/screens.rpy",
+      "line": 10,
+      "column": 0
+    }
+  ],
+  "diagnostics": [
+    {
+      "severity": "warning",
+      "message": "Filenames must begin with a letter or number, but may not begin with '00' as Ren'Py uses such files for its own purposes.",
+      "file": "game/00_bad.rpy",
+      "line": 0,
+      "column": 0
+    },
+    {
+      "severity": "warning",
+      "message": "Tab characters are not allowed. Indentation must consist only of spaces in Ren'Py scripts. (4 spaces is strongly recommended.)",
+      "file": "game/script.rpy",
+      "line": 12,
+      "column": 0
+    },
+    {
+      "severity": "warning",
+      "message": "\"$\" starts a one-line Python statement, but was found in the middle of the line.",
+      "file": "game/script.rpy",
+      "line": 18,
+      "column": 8
+    }
+  ]
+}

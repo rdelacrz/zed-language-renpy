@@ -5,12 +5,7 @@
       "camelcase": "Renpy",
       "scope": "source.renpy",
       "path": ".",
-      "file-types": [
-        "rpy",
-        "rpym",
-        "rpymc",
-        "rpyc"
-      ],
+      "file-types": ["rpy", "rpym", "rpymc", "rpyc"],
       "injection-regex": "^(renpy|rpy)$"
     }
   ],
@@ -24,7 +19,7 @@
       }
     ],
     "links": {
-      "repository": "https://github.com/user/zed-language-renpy"
+      "repository": "https://github.com/rdelacrz/zed-language-renpy"
     }
   },
   "bindings": {

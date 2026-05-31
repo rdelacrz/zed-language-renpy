@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Run Rust tests
+        run: cargo test --lib
+        working-directory: renpy-zed-extension
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: renpy-zed-extension/tree-sitter-renpy/package-lock.json
+
+      - name: Install tree-sitter deps
+        run: npm install
+        working-directory: renpy-zed-extension/tree-sitter-renpy
+
+      - name: Run tree-sitter smoke test
+        run: npm test --silent
+        working-directory: renpy-zed-extension/tree-sitter-renpy

@@ -11,9 +11,9 @@ license = "MIT"
 repository = "file://tree-sitter-renpy"
 rev = "HEAD"
 
-[languages.renpy]
-scope = "source.renpy"
-path_suffixes = ["rpy", "rpym", "rpymc", "rpyc"]
+[language_servers.renpy-lsp-server]
+name = "Ren'Py LSP Server"
+languages = ["Ren'Py"]
 
 snippets = ["./snippets/snippets.json"]
 

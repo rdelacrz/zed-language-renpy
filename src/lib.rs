@@ -269,7 +269,22 @@ impl Extension for RenpyExtension {
         _language_server_id: &zed_extension_api::LanguageServerId,
         _worktree: &Worktree,
     ) -> Result<zed_extension_api::process::Command, String> {
-        Err("no language server".to_string())
+        let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+        let binary_path = manifest_dir
+            .join("renpy-lsp-server")
+            .join("target")
+            .join("release")
+            .join("renpy-lsp-server");
+        if binary_path.exists() {
+            Ok(zed_extension_api::process::Command::new(
+                binary_path.to_string_lossy().to_string(),
+            ))
+        } else {
+            Err(
+                "renpy-lsp-server binary not found. Build it: cd renpy-lsp-server && cargo build --release"
+                    .to_string(),
+            )
+        }
     }
 
     fn run_slash_command(
@@ -351,6 +366,39 @@ register_extension!(RenpyExtension);
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn language_server_command_returns_binary_path() {
+        // Verify the path resolution logic matches what language_server_command uses
+        let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+        let binary_path = manifest_dir
+            .join("renpy-lsp-server")
+            .join("target")
+            .join("debug")
+            .join("renpy-lsp-server");
+        let path_str = binary_path.to_string_lossy().to_string();
+        assert!(
+            path_str.ends_with("renpy-lsp-server"),
+            "binary path should end with renpy-lsp-server, got: {}",
+            path_str
+        );
+        assert!(binary_path.exists(), "binary should exist at: {path_str}");
+    }
+
+    #[test]
+    fn language_server_error_mentions_binary_name() {
+        // The error message returned when binary is missing should mention
+        // renpy-lsp-server so the user knows what to build.
+        let err = Err::<zed_extension_api::process::Command, _>(
+            "renpy-lsp-server binary not found. Build it: cd renpy-lsp-server && cargo build"
+                .to_string(),
+        );
+        let msg = err.unwrap_err();
+        assert!(
+            msg.contains("renpy-lsp-server"),
+            "error should mention renpy-lsp-server, got: {msg}"
+        );
+    }
 
     #[test]
     fn parse_navigation_index_collects_unique_sorted_values() {

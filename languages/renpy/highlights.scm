@@ -7,13 +7,6 @@
 (string) @string
 (keyword_expression) @constant.builtin
 
-; Dialogue text tags (best-effort if grammar exposes them as nodes)
-(tag) @tag
-(text_tag) @tag
-(text_tag_name) @tag
-(tag_name) @tag
-(tag_value) @string.special
-
 ; === Statement nodes (each captures its keyword token for styling) ===
 
 ; Declarations / blocks
@@ -51,18 +44,6 @@
 ; Assignment
 (assignment_statement) @keyword
 
-; Screen language widgets / containers (best-effort, grammar-dependent)
-(vbox) @keyword
-(hbox) @keyword
-(grid) @keyword
-(window) @keyword
-(frame) @keyword
-(button) @keyword
-(textbutton) @keyword
-(input) @keyword
-(viewport) @keyword
-(side) @keyword
-
 ; Sub-expressions acting as keywords/operators
 (guard_expression) @keyword
 (from_expression) @keyword
@@ -80,11 +61,11 @@
 
 ; Label, screen, transform, style, testcase, translate names
 (label_statement name: (label_name) @name)
-(screen_statement name: (identifier) @name)
-(transform_statement name: (identifier) @name)
-(style_statement name: (identifier) @name)
-(testcase_statement name: (identifier) @name)
-(translate_statement name: (identifier) @name)
+(screen_statement . (identifier) @name)
+(transform_statement . (identifier) @name)
+(style_statement . (identifier) @name)
+(testcase_statement . (identifier) @name)
+(translate_statement . (identifier) @name)
 
 ; Function calls
 (call_expression function: (identifier) @function)

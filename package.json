@@ -19,6 +19,7 @@
   "homepage": "https://github.com/rdelacrz/zed-language-renpy#readme",
   "devDependencies": {
     "@types/node": "^25.9.1",
+    "tree-sitter-cli": "^0.26.9",
     "typescript": "^6.0.3"
   }
 }

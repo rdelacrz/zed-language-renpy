@@ -54,6 +54,91 @@
     "body": "define ${1:character_name} = Character(None, kind=nvl)\n${2:}",
     "description": "Create a Character (NVL)"
   },
+  "Image Definition": {
+    "prefix": "image",
+    "body": "image ${1:bg} ${2:name} = ${3:displayable}",
+    "description": "Define an image."
+  },
+  "Screen Definition": {
+    "prefix": "screen",
+    "body": "screen ${1:name}():\n\t${2:pass}",
+    "description": "Define a screen."
+  },
+  "Transform Definition": {
+    "prefix": "transform",
+    "body": "transform ${1:name}:\n\t${2:pass}",
+    "description": "Define a transform."
+  },
+  "Style Definition": {
+    "prefix": "style",
+    "body": "style ${1:name}:\n\t${2:pass}",
+    "description": "Define a style."
+  },
+  "Say With Character Attribute": {
+    "prefix": "sayattr",
+    "body": "${1:character} ${2:attribute} \"${3:text}\"",
+    "description": "Say statement with a character attribute."
+  },
+  "Show Statement": {
+    "prefix": "show",
+    "body": "show ${1:image} ${2:at position} ${3:onlayer layer}",
+    "description": "Show an image."
+  },
+  "Hide Statement": {
+    "prefix": "hide",
+    "body": "hide ${1:image} ${2:onlayer layer}",
+    "description": "Hide an image."
+  },
+  "Scene Statement": {
+    "prefix": "scene",
+    "body": "scene ${1:background} ${2:with transition}",
+    "description": "Scene statement."
+  },
+  "Camera Statement": {
+    "prefix": "camera",
+    "body": "camera ${1:at transform}",
+    "description": "Camera statement."
+  },
+  "Play Sound": {
+    "prefix": "play sound",
+    "body": "play sound \"${1:file.ogg}\"",
+    "description": "Play a sound file."
+  },
+  "Play Music": {
+    "prefix": "play music",
+    "body": "play music \"${1:file.ogg}\"",
+    "description": "Play background music."
+  },
+  "Stop Sound": {
+    "prefix": "stop sound",
+    "body": "stop sound",
+    "description": "Stop sound playback."
+  },
+  "Stop Music": {
+    "prefix": "stop music",
+    "body": "stop music",
+    "description": "Stop music playback."
+  },
+  "Queue Sound": {
+    "prefix": "queue sound",
+    "body": "queue sound \"${1:file.ogg}\"",
+    "description": "Queue a sound file."
+  },
+  "Queue Music": {
+    "prefix": "queue music",
+    "body": "queue music \"${1:file.ogg}\"",
+    "description": "Queue background music."
+  },
+  "Voice Statement": {
+    "prefix": "voice",
+    "body": "voice \"${1:file.ogg}\"",
+    "description": "Play voice audio."
+  },
+  "NVL Clear": {
+    "prefix": "nvl clear",
+    "body": "nvl clear",
+    "description": "Clear NVL mode dialogue."
+  },
   "Create MultiPersistent": {
     "prefix": "multipersist",
     "body": "${1:persistent_name} = MultiPersistent(\"${2:persistent_filename}\")",

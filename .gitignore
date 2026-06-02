@@ -53,3 +53,6 @@ target/
 # If any temporary parser outputs get created elsewhere
 *.generated.c
 *.generated.h
+
+# Hermes files
+.hermes-orchestration

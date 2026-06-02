@@ -7,11 +7,18 @@
 (string) @string
 (keyword_expression) @constant.builtin
 
+; Dialogue text tags (best-effort if grammar exposes them as nodes)
+(tag) @tag
+(text_tag) @tag
+(text_tag_name) @tag
+(tag_name) @tag
+(tag_value) @string.special
+
 ; === Statement nodes (each captures its keyword token for styling) ===
 
 ; Declarations / blocks
-(label_statement) @keyword
-(init_statement) @keyword
+(label_statement) @keyword.function
+(init_statement) @keyword.function
 (python_statement) @keyword
 (one_line_python) @keyword
 
@@ -24,25 +31,37 @@
 (image_statement) @keyword
 
 ; Flow control
-(if_statement) @keyword
-(while_statement) @keyword
-(for_statement) @keyword
-(menu_statement) @keyword
-(call_statement) @keyword
-(jump_statement) @keyword
-(return_statement) @keyword
+(if_statement) @keyword.control
+(while_statement) @keyword.control
+(for_statement) @keyword.control
+(menu_statement) @keyword.control
+(call_statement) @keyword.control
+(jump_statement) @keyword.control
+(return_statement) @keyword.control
 
 ; Definitions
-(transform_statement) @keyword
-(screen_statement) @keyword
-(style_statement) @keyword
-(testcase_statement) @keyword
-(translate_statement) @keyword
-(define_statement) @keyword
-(default_statement) @keyword
+(transform_statement) @keyword.function
+(screen_statement) @keyword.function
+(style_statement) @keyword.function
+(testcase_statement) @keyword.function
+(translate_statement) @keyword.function
+(define_statement) @keyword.function
+(default_statement) @keyword.function
 
 ; Assignment
 (assignment_statement) @keyword
+
+; Screen language widgets / containers (best-effort, grammar-dependent)
+(vbox) @keyword
+(hbox) @keyword
+(grid) @keyword
+(window) @keyword
+(frame) @keyword
+(button) @keyword
+(textbutton) @keyword
+(input) @keyword
+(viewport) @keyword
+(side) @keyword
 
 ; Sub-expressions acting as keywords/operators
 (guard_expression) @keyword

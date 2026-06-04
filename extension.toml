@@ -1,32 +1,17 @@
-id = "renpy-language"
-name = "Ren'Py Language"
-description = "Ren'Py language support for Zed."
+id = "renpy"
+name = "Ren'Py"
+description = "Ren'Py language support (syntax + language server)."
 version = "0.1.0"
 schema_version = 1
-authors = ["Roger <roger@example.com>"]
-repository = "https://github.com/roger/zed-language-renpy"
-license = "MIT"
+authors = ["rdelacrz"]
+repository = "https://github.com/rdelacrz/renpy-lsp-server"
 
-[grammars.renpy]
-repository = "file://tree-sitter-renpy"
-rev = "HEAD"
-
-[language_servers.renpy-lsp-server]
-name = "Ren'Py LSP Server"
+[language_servers.renpy-language-server]
+name = "Ren'Py Language Server"
 languages = ["Ren'Py"]
 
-snippets = ["./snippets/snippets.json"]
+[grammars.renpy]
+repository = "file:///workplace/rdelacrz/experimental/zed-renpy-extension/tree-sitter-renpy"
+commit = "HEAD" # NOTE: orchestrator will replace with the real grammar commit SHA after committing the grammar repo
 
-# Backend parity is intentionally scoped down for now.
-# Tree-sitter/config handles syntax, snippets, and basic structure.
-# Rust/WASM should only be added once a shared index is needed for completion,
-# definition, or diagnostics parity.
-
-[backend]
-# Path (relative to the extension root) where the Rust backend will write a
-# compact navigation index for JS/TS to consume as a safe fallback. The
-# `refresh_navigation_index` function updates this file when a navigation.json
-# is present in the workspace. JS/TS may also call the slash command
-# `renpy.refresh_index` (if registered by the host) to request an on-demand
-# refresh.
-index_path = "./.internal/navigation_index.json"
+snippets = ["./snippets/renpy.json"]

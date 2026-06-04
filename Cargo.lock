@@ -28,9 +28,9 @@ dependencies = [
 
 [[package]]
 name = "bitflags"
-version = "2.11.1"
+version = "2.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c4512299f36f043ab09a583e57bceb5a5aab7a73db1805848e8fef3c9e8c78b3"
+checksum = "84d7ced0ae9557296835c32bf1b1e02b44c746701f898460fb000d7eaa84f00a"
 
 [[package]]
 name = "cfg-if"
@@ -339,9 +339,9 @@ checksum = "92daf443525c4cce67b150400bc2316076100ce0b3686209eb8cf3c31612e6f0"
 
 [[package]]
 name = "log"
-version = "0.4.30"
+version = "0.4.31"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "616ec5685824bcc94416c6d4a7a446eea774a31efd7062c8480ba6fd06d7a6e5"
+checksum = "113b30b4cd05f7c06868fdb2854f66a7b9fece9a48425351cd532e810d74024f"
 
 [[package]]
 name = "memchr"
@@ -739,19 +739,17 @@ dependencies = [
 ]
 
 [[package]]
-name = "zed-language-renpy"
+name = "zed-renpy-extension"
 version = "0.1.0"
 dependencies = [
- "serde",
- "serde_json",
  "zed_extension_api",
 ]
 
 [[package]]
 name = "zed_extension_api"
-version = "0.7.0"
+version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0729d50b4ca0a7e28e590bbe32e3ca0194d97ef654961451a424c661a366fca0"
+checksum = "a3ee021e3a4c69d6ae90137fcf7537d1a8a5032dc9bf180c8fa6dd1a2f7c56d7"
 dependencies = [
  "serde",
  "serde_json",

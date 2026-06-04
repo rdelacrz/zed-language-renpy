@@ -1,7 +1,4 @@
-; Bracket matching pairs
-; Parentheses
+; Bracket pair queries for matching/highlighting paired delimiters.
 ("(" @open ")" @close)
-; Brackets
 ("[" @open "]" @close)
-; Braces (used in string interpolation)
 ("{" @open "}" @close)

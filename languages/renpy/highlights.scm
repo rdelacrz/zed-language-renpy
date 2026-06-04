@@ -1,88 +1,46 @@
-; Ren'Py syntax highlighting queries
-; Verified against grammar.js node types (May 2026)
+; Tree-sitter highlighting queries for Ren'Py syntax.
+; Keywords
+["label" "menu" "screen" "define" "default" "transform" "style"
+ "image" "init" "python" "if" "elif" "else" "while" "for"
+ "jump" "call" "show" "scene" "hide" "with" "use" "return"
+ "pass" "translate" "camera" "window" "voice" "play" "stop"
+ "queue" "pause" "nvl" "early" "in" "expression"
+ "offset" "is" "take" "strings" "auto" "sustain" "clear"
+ "layer"] @keyword
 
-; Literals
-(comment) @comment
-(number) @number
+; Definition names
+(label name: (label_name (identifier) @function))
+(screen name: (identifier) @function)
+(define name: (identifier) @variable)
+(define name: (dotted_name) @variable)
+(default name: (identifier) @variable)
+(default name: (dotted_name) @variable)
+(transform name: (identifier) @function)
+(transform name: (dotted_name) @function)
+(style name: (identifier) @type)
+(image name: (image_name) @constant)
+
+; References
+(jump target: (label_name (identifier) @function))
+(call name: (identifier) @function)
+(call name: (label_name (identifier) @function))
+(use name: (identifier) @function)
+
+; Strings
 (string) @string
-(keyword_expression) @constant.builtin
+(escape_sequence) @string.escape
+(interpolation) @embedded
+(text_tag) @tag
 
-; === Statement nodes (each captures its keyword token for styling) ===
+; Comments
+(comment) @comment
 
-; Declarations / blocks
-(label_statement) @keyword.function
-(init_statement) @keyword.function
-(python_statement) @keyword
-(one_line_python) @keyword
+; Numbers
+(integer) @number
 
-; Image and scene management
-(scene_statement) @keyword
-(show_statement) @keyword
-(show_layer_statement) @keyword
-(hide_statement) @keyword
-(camera_statement) @keyword
-(image_statement) @keyword
-
-; Flow control
-(if_statement) @keyword.control
-(while_statement) @keyword.control
-(for_statement) @keyword.control
-(menu_statement) @keyword.control
-(call_statement) @keyword.control
-(jump_statement) @keyword.control
-(return_statement) @keyword.control
-
-; Definitions
-(transform_statement) @keyword.function
-(screen_statement) @keyword.function
-(style_statement) @keyword.function
-(testcase_statement) @keyword.function
-(translate_statement) @keyword.function
-(define_statement) @keyword.function
-(default_statement) @keyword.function
-
-; Assignment
-(assignment_statement) @keyword
-
-; Sub-expressions acting as keywords/operators
-(guard_expression) @keyword
-(from_expression) @keyword
-(at_expression) @keyword
-(with_clause) @keyword
-(as_clause) @keyword
-(onlayer_clause) @keyword
-(zorder_clause) @keyword
-(behind_clause) @keyword
-
-; Say attributes (e.g., character -flag1 -flag2 "Dialogue")
-(say_attribute) @keyword
-
-; === Named identifiers ===
-
-; Label, screen, transform, style, testcase, translate names
-(label_statement name: (label_name) @name)
-(screen_statement . (identifier) @name)
-(transform_statement . (identifier) @name)
-(style_statement . (identifier) @name)
-(testcase_statement . (identifier) @name)
-(translate_statement . (identifier) @name)
-
-; Function calls
-(call_expression function: (identifier) @function)
-
-; Attribute access (e.g., foo.bar)
-(attribute_expression attribute: (identifier) @property)
-
-; Variable definitions — the left-hand side of assignments
-(assignment_statement . (identifier) @variable)
-(define_statement . (identifier) @variable)
-(default_statement . (identifier) @variable)
-
-; Fallback: any bare identifier
-(identifier) @variable
+; Operators
+["=" "+=" "|="] @operator
 
 ; Punctuation
-(line_end) @punctuation.delimiter
-
-; Blank lines (whitespace markers)
-(blank_line) @comment
+[":" "." "," "$"] @punctuation.delimiter
+["(" ")" "[" "]" "{" "}"] @punctuation.bracket

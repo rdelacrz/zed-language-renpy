@@ -1,291 +1,273 @@
-const PREC = {
-  ASSIGNMENT: 0,
-  CALL: 1,
-  ATOM: 2,
-};
+/**
+ * Tree-sitter grammar for the Ren'Py visual-novel scripting language.
+ *
+ * Covers top-level statements (label, screen, define, show, menu, etc.), string literals
+ * with interpolation/text-tags, Python blocks (injection targets), and ATL transform syntax.
+ * This grammar is intentionally coarse (v1): indented block bodies are opaque `body_line` nodes
+ * since tree-sitter cannot track Python-style indentation without an external scanner.
+ *
+ * DO NOT regenerate parser output (src/) from comments-only changes.
+ */
+/// <reference types="tree-sitter-cli/dsl" />
 
 module.exports = grammar({
   name: "renpy",
 
-  // Declare conflicts between label_statement and other statement types
-  // that start with an identifier so Tree-sitter can resolve ambiguities.
-  extras: ($) => [/[\s\f\r\t\v]+/, $.comment],
+  extras: ($) => [/[ \t\r]/, $.comment],
 
   word: ($) => $.identifier,
 
+  conflicts: ($) => [],
+
   rules: {
-    source_file: ($) => repeat(choice($.statement, $.blank_line)),
+    source_file: ($) => repeat($._top_level),
 
-    blank_line: ($) => prec(1, /\r?\n/),
-
-    line_end: ($) => /\r?\n/,
-
-    statement: ($) =>
+    // Top-level: full statement recognition
+    _top_level: ($) =>
       choice(
-        $.label_statement,
-        $.init_statement,
-        $.python_statement,
-        $.one_line_python,
-        $.scene_statement,
-        $.show_statement,
-        $.hide_statement,
-        $.show_layer_statement,
-        $.jump_statement,
-        $.call_statement,
-        $.menu_statement,
-        $.menu_item,
+        $.label,
+        $.menu,
+        $.screen,
+        $.define,
+        $.default,
+        $.transform,
+        $.style,
+        $.image,
+        $.init,
+        $.python_block,
         $.if_statement,
+        $.elif_clause,
+        $.else_clause,
         $.while_statement,
         $.for_statement,
+        $.jump,
+        $.call,
+        $.show,
+        $.scene,
+        $.hide,
+        $.with_statement,
+        $.use,
         $.return_statement,
+        $.pass_statement,
+        $.translate,
+        $.camera,
+        $.window_statement,
+        $.voice,
+        $.play,
+        $.stop,
+        $.queue,
+        $.pause_statement,
+        $.nvl_statement,
+        $.one_line_python,
+        $.menu_choice,
         $.say_statement,
-        $.assignment_statement,
-        $.define_statement,
-        $.default_statement,
-        $.transform_statement,
-        $.image_statement,
-        $.camera_statement,
-        $.translate_statement,
-        $.testcase_statement,
-        $.style_statement,
-        $.screen_statement,
+        $._newline
       ),
 
-    // Left-associative — ensures that when parsing a block, statements
-    // are grouped starting from the earliest. This avoids ambiguity with
-    // adjacent blocks where the parser might otherwise try to associate
-    // a statement with a later block.
-    block: ($) => prec.left(repeat1(choice($.statement, $.comment, $.blank_line))),
+    _newline: ($) => /\n/,
 
-    label_statement: ($) =>
-      seq("label", field("name", $.label_name), ":", $.block),
-    init_statement: ($) =>
-      seq("init", optional($.number), optional("python"), ":", $.block),
-    python_statement: ($) => seq("python", ":", $.block),
-    one_line_python: ($) => seq("$", $.python_expression, $.line_end),
-    // Python expression on one line — supports both plain expressions and
-    // assignment (e.g., $ x = 5). Assignment needs to be separate from the
-    // main expression rule because assignment uses prec.right with a lower
-    // precedence than binary expressions.
-    python_expression: ($) =>
+    // Block: opaque indented content (lines).
+    // Without external scanner, we can't track indentation, so blocks are
+    // just sequences of non-empty lines. Each line is captured as a body_line.
+    block: ($) => prec.right(repeat1(choice(
+      $.body_line,
+      $._newline
+    ))),
+
+    // A single line of block content (opaque for v1 - will be injection target for Python)
+    body_line: ($) => seq(/[^\n]+/, $._newline),
+
+    // --- Comments ---
+    comment: ($) => token(seq("#", /.*/)),
+
+    // --- Identifiers and names ---
+    identifier: ($) => /[a-zA-Z_]\w*/,
+
+    // Dotted name: identifier.identifier.identifier...
+    dotted_name: ($) => seq($.identifier, repeat1(seq(".", $.identifier))),
+
+    // Label name: optional leading dot + identifier (+ optional dot-separated parts)
+    label_name: ($) => seq(optional("."), $.identifier, repeat(seq(".", $.identifier))),
+
+    // --- Strings ---
+    string: ($) =>
       choice(
-        seq($.identifier, "=", $.expression),
-        $.expression,
+        $.triple_double_string,
+        $.triple_single_string,
+        $.double_string,
+        $.single_string
       ),
 
-    scene_statement: ($) =>
-      seq(
-        "scene",
-        choice(
-          $.identifier,
-          seq("expression", $.expression),
-        ),
-        repeat($.say_attribute),
-        optional($.at_expression),
-        optional($.with_clause),
-        optional($.as_clause),
-        optional($.onlayer_clause),
-        optional($.zorder_clause),
-        optional($.behind_clause),
-        choice(
-          seq(":", $.block),
-          $.line_end,
-        ),
-      ),
-    show_statement: ($) =>
-      seq(
-        "show",
-        choice(
-          $.identifier,
-          seq("expression", $.expression),
-        ),
-        repeat($.say_attribute),
-        optional($.at_expression),
-        optional($.with_clause),
-        optional($.as_clause),
-        optional($.onlayer_clause),
-        optional($.zorder_clause),
-        optional($.behind_clause),
-        choice(
-          seq(":", $.block),
-          $.line_end,
-        ),
-      ),
-    hide_statement: ($) =>
-      seq("hide", $.identifier, optional(seq("with", $.expression))),
-    show_layer_statement: ($) =>
-      seq(
-        "show",
-        "layer",
-        $.identifier,
-        optional($.at_expression),
-        optional(seq(":", $.block)),
-      ),
-    camera_statement: ($) =>
-      seq(
-        "camera",
-        $.identifier,
-        optional($.at_expression),
-        optional(seq(":", $.block)),
-      ),
+    triple_double_string: ($) =>
+      seq('"""', repeat(choice($.interpolation, $.text_tag, $.escape_sequence, /[^"\\{\[]+/, /"/)), '"""'),
 
-    jump_statement: ($) => seq("jump", $.label_name),
-    call_statement: ($) =>
-      choice(
-        seq("call", $.label_name, optional($.from_expression)),
-        seq("call", "expression", $.expression),
-      ),
+    triple_single_string: ($) =>
+      seq("'''", repeat(choice($.interpolation, $.text_tag, $.escape_sequence, /[^'\\{\[]+/, /'/)), "'''"),
 
-    menu_statement: ($) =>
-      seq("menu", optional($.label_name), optional($.arguments), ":", $.block),
-    menu_item: ($) =>
-      choice(
-        seq(
-          $.string,
-          optional($.arguments),
-          optional($.guard_expression),
-          ":",
-          $.block,
-        ),
-        seq("set", $.expression, $.line_end),
-      ),
+    double_string: ($) =>
+      seq('"', repeat(choice($.interpolation, $.text_tag, $.escape_sequence, /[^"\\{\[\n]+/)), '"'),
 
+    single_string: ($) =>
+      seq("'", repeat(choice($.interpolation, $.text_tag, $.escape_sequence, /[^'\\{\[\n]+/)), "'"),
+
+    escape_sequence: ($) => token.immediate(/\\./),
+    interpolation: ($) => seq("[", /[^\]]+/, "]"),
+    text_tag: ($) => seq("{", /[^}]*/, "}"),
+
+    // --- Say statement (lowest precedence - fallback for bare strings/dialogue) ---
+    say_statement: ($) =>
+      prec(-1, choice(
+        seq(field("who", $.identifier), field("what", $.string), $._newline),
+        seq(field("what", $.string), $._newline)
+      )),
+
+    // --- Label ---
+    label: ($) =>
+      prec.right(seq("label", field("name", $.label_name), optional($.parameters), optional("hide"), ":", $._newline, optional($.block))),
+
+    // --- Menu ---
+    menu: ($) =>
+      prec.right(seq("menu", optional(field("name", $.label_name)), optional($.parameters), ":", $._newline, optional($.block))),
+
+    // Menu choice: "text" followed by optional condition and colon
+    menu_choice: ($) =>
+      prec.right(seq(field("caption", $.string), optional(seq("if", field("condition", $.expression))), ":", $._newline, optional($.block))),
+
+    // --- Screen ---
+    screen: ($) =>
+      prec.right(seq("screen", field("name", $.identifier), optional($.parameters), ":", $._newline, optional($.block))),
+
+    // --- Define ---
+    define: ($) =>
+      seq("define", optional($.integer), field("name", choice($.dotted_name, $.identifier)), choice("=", "+=", "|="), field("value", $.expression), $._newline),
+
+    // --- Default ---
+    default: ($) =>
+      seq("default", optional($.integer), field("name", choice($.dotted_name, $.identifier)), "=", field("value", $.expression), $._newline),
+
+    // --- Transform ---
+    transform: ($) =>
+      prec.right(seq("transform", optional($.integer), field("name", choice($.dotted_name, $.identifier)), optional($.parameters), ":", $._newline, optional($.block))),
+
+    // --- Style ---
+    style: ($) =>
+      prec.right(seq("style", field("name", $.identifier), repeat($._style_clause), choice(seq(":", $._newline, optional($.block)), $._newline))),
+
+    _style_clause: ($) =>
+      choice(seq("is", $.identifier), seq("take", $.identifier)),
+
+    // --- Image ---
+    image: ($) =>
+      prec.right(seq("image", field("name", $.image_name), choice(seq("=", field("value", $.expression), $._newline), seq(":", $._newline, optional($.block))))),
+
+    image_name: ($) => repeat1($.identifier),
+
+    // --- Init ---
+    init: ($) =>
+      prec.right(1, seq("init", choice(
+        seq(optional($.integer), "python", optional("early"), optional("hide"), optional(seq("in", choice($.dotted_name, $.identifier))), ":", $._newline, optional($.block)),
+        seq("offset", "=", $.integer, $._newline),
+        seq(optional($.integer), ":", $._newline, optional($.block))
+      ))),
+
+    // --- Python block ---
+    python_block: ($) =>
+      prec.right(seq("python", optional("early"), optional("hide"), optional(seq("in", choice($.dotted_name, $.identifier))), ":", $._newline, optional($.block))),
+
+    // --- If/elif/else ---
     if_statement: ($) =>
-      prec.right(
-        seq(
-          "if",
-          $.expression,
-          ":",
-          $.block,
-          repeat(seq("elif", $.expression, ":", $.block)),
-          optional(seq("else", ":", $.block)),
-        ),
-      ),
-    while_statement: ($) => seq("while", $.expression, ":", $.block),
-    for_statement: ($) => seq("for", $.identifier, "in", $.expression, ":", $.block),
-    return_statement: ($) => "return",
+      prec.right(seq("if", field("condition", $.expression), ":", $._newline, optional($.block))),
 
-    say_statement: ($) => seq(optional($.expression), optional($.say_attributes), $.string, $.line_end),
-    say_attributes: ($) => prec.left(repeat1($.say_attribute)),
-    say_attribute: ($) => token(prec(2, /-[A-Za-z_][A-Za-z0-9_]*/)),
+    elif_clause: ($) =>
+      prec.right(seq("elif", field("condition", $.expression), ":", $._newline, optional($.block))),
 
-    assignment_statement: ($) => prec.right(PREC.ASSIGNMENT, seq($.identifier, "=", $.expression)),
-    define_statement: ($) => prec.right(seq("define", $.identifier, "=", $.expression)),
-    default_statement: ($) => prec.right(seq("default", $.identifier, "=", $.expression)),
+    else_clause: ($) => prec.right(seq("else", ":", $._newline, optional($.block))),
 
-    transform_statement: ($) =>
-      seq("transform", $.identifier, optional($.parameters), ":", $.block),
-    image_statement: ($) =>
-      prec.right(
-        seq(
-          "image",
-          $.image_name,
-          optional(seq("=", $.expression)),
-          optional(seq(":", $.block)),
-        ),
-      ),
-    style_statement: ($) => seq("style", $.identifier, ":", $.block),
-    translate_statement: ($) => seq("translate", $.identifier, ":", $.block),
-    testcase_statement: ($) =>
-      seq("testcase", optional($.identifier), ":", $.block),
-    screen_statement: ($) =>
-      seq("screen", $.identifier, optional($.parameters), ":", $.block),
+    // --- While ---
+    while_statement: ($) =>
+      prec.right(seq("while", field("condition", $.expression), ":", $._newline, optional($.block))),
 
-    at_expression: ($) => prec.left(1, seq("at", commaSep($.expression))),
-    with_clause: ($) => seq("with", $.expression),
-    as_clause: ($) => seq("as", $.identifier),
-    onlayer_clause: ($) => seq("onlayer", $.expression),
-    zorder_clause: ($) => seq("zorder", $.expression),
-    behind_clause: ($) => seq("behind", commaSep($.expression)),
-    image_name: ($) =>
-      seq($.image_name_component, repeat(seq(".", $.image_name_component))),
-    image_name_component: (_) => /[A-Za-z0-9_\-]+/,
+    // --- For ---
+    for_statement: ($) =>
+      prec.right(seq("for", $.expression, ":", $._newline, optional($.block))),
 
-    guard_expression: ($) => seq("if", $.expression),
-    from_expression: ($) => seq("from", $.identifier),
+    // --- Jump ---
+    jump: ($) =>
+      seq("jump", choice(seq("expression", $.expression), field("target", $.label_name)), $._newline),
 
-    parameter: ($) => seq($.identifier, optional(seq("=", $.expression))),
-    parameters: ($) => seq("(", optional(commaSep($.parameter)), ")"),
-    argument: ($) => seq(optional(seq($.identifier, "=")), $.expression),
-    arguments: ($) => seq("(", optional(commaSep($.argument)), ")"),
+    // --- Call ---
+    call: ($) =>
+      seq("call", choice(seq("screen", field("name", $.identifier)), seq("expression", $.expression), seq(field("name", $.label_name), optional($.expression))), $._newline),
 
-    expression: ($) =>
-      choice(
-        $.identifier,
-        $.number,
-        $.string,
-        $.call_expression,
-        $.attribute_expression,
-        $.list_expression,
-        $.parenthesized_expression,
-        $.binary_expression,
-        $.unary_expression,
-        $.keyword_expression,
-      ),
-    keyword_expression: ($) => choice("True", "False", "None"),
-    call_expression: ($) =>
-      prec.left(
-        PREC.CALL,
-        seq(
-          field("function", choice($.identifier, $.attribute_expression)),
-          "(",
-          optional(commaSep($.expression)),
-          ")",
-        ),
-      ),
-    attribute_expression: ($) =>
-      prec.left(
-        seq(
-          field("value", $.identifier),
-          ".",
-          field("attribute", $.identifier),
-        ),
-      ),
-    list_expression: ($) => seq("[", optional(commaSep($.expression)), "]"),
-    parenthesized_expression: ($) =>
-      seq("(", optional(commaSep($.expression)), ")"),
-    unary_expression: ($) => prec.right(seq(choice("-", "not"), $.expression)),
-    binary_expression: ($) =>
-      prec.left(
-        1,
-        seq(
-          $.expression,
-          choice(
-            "+",
-            "-",
-            "*",
-            "/",
-            "//",
-            "%",
-            "and",
-            "or",
-            "in",
-            "is",
-            "==",
-            "!=",
-            "<",
-            ">",
-            "<=",
-            ">=",
-          ),
-          $.expression,
-        ),
-      ),
+    // --- Show ---
+    show: ($) =>
+      prec.right(seq("show", choice(seq("screen", $.identifier, optional($.expression)), seq("layer", $.identifier, optional($.expression)), $.expression), choice($._newline, seq(":", $._newline, optional($.block))))),
 
-    label_name: ($) => seq(optional(seq($.identifier, ".")), $.identifier),
-    identifier: (_) => /[A-Za-z_][A-Za-z0-9_]*/,
-    number: (_) => /(?:\d+\.\d*|\d+|\.\d+)/,
-    string: (_) =>
-      choice(
-        /"([^"\\]|\\.)*"/,
-        /'([^'\\]|\\.)*'/,
-        /"""([\s\S]*?)"""/,
-        /'''([\s\S]*?)'''/,
-      ),
-    comment: (_) => token(seq("#", /[^\n]*/)),
+    // --- Scene ---
+    scene: ($) =>
+      prec.right(seq("scene", optional($.expression), choice($._newline, seq(":", $._newline, optional($.block))))),
+
+    // --- Hide ---
+    hide: ($) => seq("hide", $.expression, $._newline),
+
+    // --- With ---
+    with_statement: ($) => seq("with", $.expression, $._newline),
+
+    // --- Use ---
+    use: ($) => seq("use", field("name", $.identifier), optional($.expression), $._newline),
+
+    // --- Return ---
+    return_statement: ($) => seq("return", optional($.expression), $._newline),
+
+    // --- Pass ---
+    pass_statement: ($) => seq("pass", $._newline),
+
+    // --- Translate ---
+    translate: ($) =>
+      prec.right(seq("translate", $.identifier, choice(
+        seq("strings", ":", $._newline, optional($.block)),
+        seq("python", ":", $._newline, optional($.block)),
+        seq("style", ":", $._newline, optional($.block)),
+        seq($.identifier, ":", $._newline, optional($.block))
+      ))),
+
+    // --- Camera ---
+    camera: ($) =>
+      prec.right(seq("camera", optional($.expression), choice($._newline, seq(":", $._newline, optional($.block))))),
+
+    // --- Window ---
+    window_statement: ($) => seq("window", choice("show", "hide", "auto"), $._newline),
+
+    // --- Voice ---
+    voice: ($) => seq("voice", choice("sustain", $.string), $._newline),
+
+    // --- Play ---
+    play: ($) => seq("play", $.identifier, $.expression, $._newline),
+
+    // --- Stop ---
+    stop: ($) => seq("stop", $.identifier, optional($.expression), $._newline),
+
+    // --- Queue ---
+    queue: ($) => seq("queue", $.identifier, $.expression, $._newline),
+
+    // --- Pause ---
+    pause_statement: ($) => seq("pause", optional($.expression), $._newline),
+
+    // --- NVL ---
+    nvl_statement: ($) => seq("nvl", choice("clear", "show", "hide"), $._newline),
+
+    // --- One-line Python ---
+    one_line_python: ($) => seq("$", $.expression, $._newline),
+
+    // --- Expression: rest-of-line content before colon or newline ---
+    expression: ($) => /[^\n:]+/,
+
+    // --- Parameters ---
+    parameters: ($) => seq("(", optional($._parameter_list), ")"),
+    _parameter_list: ($) => seq($.parameter, repeat(seq(",", $.parameter)), optional(",")),
+    parameter: ($) => seq($.identifier, optional(seq("=", /[^,)]+/))),
+
+    // --- Integers ---
+    integer: ($) => /[+-]?\d+/,
   },
 });
-
-function commaSep(rule) {
-  return seq(rule, repeat(seq(",", rule)), optional(","));
-}

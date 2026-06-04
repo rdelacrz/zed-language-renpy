@@ -1,0 +1,45 @@
+{
+  "projectName": "zed-renpy-extension",
+  "workspaceRoot": "/workplace/rdelacrz/experimental/zed-renpy-extension",
+  "versionSet": null,
+  "description": "A Zed editor extension that adds rich language support for the Ren'Py visual-novel scripting language, aiming for feature parity with the official VSCode 'language-renpy' extension. Rich features (completion, hover, signature help, go-to-definition, references, document symbols, diagnostics, document color) are provided by a Rust language server built on the tower-lsp library. The Zed-facing extension is a WASM crate using zed_extension_api that registers the language, ships tree-sitter highlighting queries, and spawns the language server binary. Must be loadable as a Zed dev extension.",
+  "buildSystem": "cargo",
+  "buildCommand": "cargo build",
+  "packages": [
+    {
+      "name": "zed-renpy-extension (root WASM crate)",
+      "description": "Zed extension entry point. Implements zed_extension_api::Extension to declare the Ren'Py language server command and locate/spawn the language-server binary. Ships extension.toml, languages/renpy/ config + tree-sitter queries, snippets.",
+      "language": "Rust (wasm32-wasip1)",
+      "keyTechnologies": ["zed_extension_api", "tree-sitter", "WASM"],
+      "status": "planned"
+    },
+    {
+      "name": "renpy-language-server",
+      "description": "Native Rust binary language server using tower-lsp. Implements LSP requests (textDocument/completion, hover, signatureHelp, definition, references, documentSymbol, publishDiagnostics, documentColor). Ports parsing/tokenizer + navigation-data logic from the VSCode extension.",
+      "language": "Rust",
+      "keyTechnologies": ["tower-lsp", "tokio", "lsp-types", "serde"],
+      "status": "planned"
+    }
+  ],
+  "dependencyChain": [
+    "renpy-language-server (LSP binary) is independent and built first",
+    "zed-renpy-extension (WASM crate) references/locates the built LSP binary"
+  ],
+  "crossPackageTriggers": [
+    "Changing the LSP binary name, CLI args, or startup behavior requires updating the extension's language_server_command in the WASM crate.",
+    "Adding a new LSP capability in the server may require adjusting language config / capabilities advertised, and may need new tree-sitter queries for highlighting.",
+    "Changing the language id, file extensions, or grammar in extension.toml/languages config must stay in sync with the server's document selector assumptions."
+  ],
+  "keyTechnologies": ["Rust", "tower-lsp", "tokio", "tree-sitter", "zed_extension_api", "WASM", "Language Server Protocol"],
+  "keyDocs": [
+    ".context/zed/docs/src/extensions/developing-extensions.md",
+    ".context/zed/docs/src/extensions/languages.md",
+    ".context/zed/docs/src/configuring-languages.md",
+    ".context/zed/docs/src/semantic-tokens.md",
+    ".context/zed/extensions (example extensions: html, glsl, proto, test-extension)",
+    ".context/vscode-language-renpy (reference VSCode extension to match features)",
+    ".context/language-server-protocol/_specifications (LSP 3.17/3.18 spec)",
+    ".context/renpy (Ren'Py language source for ground-truth grammar/keywords)"
+  ],
+  "notes": "Greenfield project; not a Brazil workspace (no src/<Package>/Config files). project.json authored directly by the orchestrator to reflect the planned architecture. Use the tower-lsp library (https://github.com/ebkalderon/tower-lsp) for the Rust LSP implementation."
+}

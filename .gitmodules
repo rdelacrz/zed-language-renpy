@@ -1,3 +1,0 @@
-[submodule "renpy-lsp-server"]
-	path = renpy-lsp-server
-	url = https://github.com/rdelacrz/renpy-lsp-server

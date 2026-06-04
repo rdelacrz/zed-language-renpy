@@ -1,0 +1,14 @@
+/home/roger/workspace/zed-language-renpy/zed-language-renpy/target/debug/deps/serde-888dc1fa86f3e08a.d: /home/roger/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /home/roger/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /home/roger/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /home/roger/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /home/roger/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /home/roger/workspace/zed-language-renpy/zed-language-renpy/target/debug/build/serde-17576bbc953fa3eb/out/private.rs
+
+/home/roger/workspace/zed-language-renpy/zed-language-renpy/target/debug/deps/libserde-888dc1fa86f3e08a.rlib: /home/roger/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /home/roger/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /home/roger/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /home/roger/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /home/roger/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /home/roger/workspace/zed-language-renpy/zed-language-renpy/target/debug/build/serde-17576bbc953fa3eb/out/private.rs
+
+/home/roger/workspace/zed-language-renpy/zed-language-renpy/target/debug/deps/libserde-888dc1fa86f3e08a.rmeta: /home/roger/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /home/roger/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /home/roger/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /home/roger/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /home/roger/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /home/roger/workspace/zed-language-renpy/zed-language-renpy/target/debug/build/serde-17576bbc953fa3eb/out/private.rs
+
+/home/roger/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs:
+/home/roger/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs:
+/home/roger/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs:
+/home/roger/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs:
+/home/roger/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs:
+/home/roger/workspace/zed-language-renpy/zed-language-renpy/target/debug/build/serde-17576bbc953fa3eb/out/private.rs:
+
+# env-dep:OUT_DIR=/home/roger/workspace/zed-language-renpy/zed-language-renpy/target/debug/build/serde-17576bbc953fa3eb/out

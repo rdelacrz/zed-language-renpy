@@ -11,7 +11,7 @@ name = "Ren'Py Language Server"
 languages = ["Ren'Py"]
 
 [grammars.renpy]
-repository = "file:///workplace/rdelacrz/experimental/zed-renpy-extension/tree-sitter-renpy"
-commit = "HEAD" # NOTE: orchestrator will replace with the real grammar commit SHA after committing the grammar repo
+repository = "https://github.com/rdelacrz/zed-language-renpy/tree-sitter-renpy"
+commit = "HEAD" # replace with the real grammar commit SHA after committing the grammar repo
 
 snippets = ["./snippets/renpy.json"]

@@ -12,6 +12,6 @@ languages = ["Ren'Py"]
 
 [grammars.renpy]
 repository = "https://github.com/rdelacrz/zed-language-renpy/tree-sitter-renpy"
-commit = "HEAD" # replace with the real grammar commit SHA after committing the grammar repo
+commit = "3d3ff1f1017ffcd9ea44d3cadf62b63f4b46dd26"
 
 snippets = ["./snippets/renpy.json"]

@@ -1,14 +1,23 @@
 {
-  "name": "tree-sitter-renpy",
+  "name": "renpy-tree-sitter",
   "version": "0.1.0",
-  "description": "Tree-sitter grammar for Ren'Py",
-  "main": "bindings/node",
+  "description": "Tree-sitter grammar for Ren'Py scripts",
+  "scripts": {
+    "generate": "tree-sitter generate",
+    "test": "tree-sitter test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rockettap/renpy-tree-sitter.git"
+  },
   "keywords": [
     "tree-sitter",
-    "renpy"
+    "renpy",
+    "parser"
   ],
+  "author": "Oleksandr; original grammar by M. A. Azzam (ZeynTheDev)",
   "license": "MIT",
   "devDependencies": {
-    "tree-sitter-cli": "^0.24.0"
+    "tree-sitter-cli": "0.25.10"
   }
 }

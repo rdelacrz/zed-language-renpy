@@ -1,1 +1,9 @@
 target/
+/dist/
+/grammars/
+/extension.wasm
+node_modules/
+__pycache__/
+.venv/
+*.log
+log.html

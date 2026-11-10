@@ -3,6 +3,8 @@
 name = "Ren'Py"
 grammar = "renpy"
 path_suffixes = ["rpy", "rpym"]
+code_fence_block_name = "renpy"
+increase_indent_pattern = ":\\s*(#.*)?$"
 line_comments = ["# "]
 tab_size = 4
 hard_tabs = false

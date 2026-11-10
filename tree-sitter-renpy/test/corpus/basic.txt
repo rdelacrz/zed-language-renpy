@@ -1,0 +1,25 @@
+==================
+Label, dialogue and return
+==================
+
+label start:
+    e "Hello, [player]!"
+    "Narration."
+    return
+
+---
+
+(source_file
+  (label_statement
+    (label_name
+      (dotted_name
+        (identifier)))
+    (block
+      (say_statement
+        (dotted_name
+          (identifier))
+        (string
+          (interpolation)))
+      (say_statement
+        (string))
+      (return_statement))))

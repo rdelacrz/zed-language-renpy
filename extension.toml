@@ -5,13 +5,15 @@ version = "0.1.0"
 schema_version = 1
 authors = ["rdelacrz"]
 repository = "https://github.com/rdelacrz/zed-language-renpy"
+snippets = ["./snippets/renpy.json"]
 
 [language_servers.renpy-language-server]
 name = "Ren'Py Language Server"
 languages = ["Ren'Py"]
 
-[grammars.renpy]
-repository = "https://github.com/rdelacrz/zed-language-renpy/tree-sitter-renpy"
-commit = "3d3ff1f1017ffcd9ea44d3cadf62b63f4b46dd26"
+[language_servers.renpy-language-server.language_ids]
+"Ren'Py" = "renpy"
 
-snippets = ["./snippets/renpy.json"]
+[grammars.renpy]
+repository = "https://github.com/rockettap/renpy-tree-sitter"
+rev = "0e9ea0d0dcb8860ea1d5f3ac6356855bf58cc556"

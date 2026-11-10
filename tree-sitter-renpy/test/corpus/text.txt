@@ -1,0 +1,39 @@
+==================
+Text parts and translation
+==================
+
+label text_parts:
+    e "Hello [name]! {b}Bold{/b} and \"quoted\" [[literal] {{tag"
+    return
+
+translate ukrainian strings:
+    old "Yes"
+    new "Так"
+
+---
+
+(source_file
+  (label_statement
+    (label_name
+      (dotted_name
+        (identifier)))
+    (block
+      (say_statement
+        (dotted_name
+          (identifier))
+        (string
+          (interpolation)
+          (text_tag)
+          (text_tag)
+          (escape_sequence)
+          (escape_sequence)
+          (escape_sequence)
+          (escape_sequence)))
+      (return_statement)))
+  (translate_statement
+    (identifier)
+    (translate_strings_block
+      (translation_string
+        (string))
+      (translation_string
+        (string)))))

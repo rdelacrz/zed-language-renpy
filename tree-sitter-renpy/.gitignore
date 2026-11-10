@@ -1,4 +1,6 @@
 node_modules/
-build/
-*.log
-log.html
+*.wasm
+*.so
+*.dylib
+*.dll
+.DS_Store

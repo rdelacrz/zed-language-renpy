@@ -1,0 +1,65 @@
+==================
+Screen language and ATL
+==================
+
+screen inventory(items):
+    frame:
+        xalign 0.5
+        vbox:
+            for item in items:
+                textbutton item action Return(item)
+
+transform bounce:
+    yoffset 0
+    easein 0.3 yoffset -20
+    easeout 0.3 yoffset 0
+    repeat
+
+---
+
+(source_file
+  (screen_statement
+    (identifier)
+    (bracketed)
+    (element_block
+      (element
+        (identifier)
+        (element_block
+          (element
+            (identifier)
+            (number))
+          (element
+            (identifier)
+            (element_block
+              (element
+                (identifier)
+                (identifier)
+                (identifier)
+                (identifier)
+                (element_block
+                  (element
+                    (identifier)
+                    (identifier)
+                    (identifier)
+                    (identifier)
+                    (bracketed))))))))))
+  (transform_statement
+    (dotted_name
+      (identifier))
+    (atl_block
+      (element
+        (identifier)
+        (number))
+      (element
+        (identifier)
+        (number)
+        (identifier)
+        (operator)
+        (number))
+      (element
+        (identifier)
+        (number)
+        (identifier)
+        (number))
+      (element
+        (identifier)))))

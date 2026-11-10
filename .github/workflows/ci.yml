@@ -1,0 +1,41 @@
+name: verify
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-wasip2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test dependencies
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install -r tests/requirements.txt
+      - name: Build and integration tests
+        run: python scripts/build.py --test
+      - name: Install WASI SDK
+        run: |
+          curl -fL --retry 3 https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sdk-34/wasi-sdk-34.0-x86_64-linux.tar.gz -o "$RUNNER_TEMP/wasi-sdk.tar.gz"
+          tar -xzf "$RUNNER_TEMP/wasi-sdk.tar.gz" -C "$RUNNER_TEMP"
+      - name: Package and execute the WASM parser
+        env:
+          WASI_SDK_PATH: ${{ runner.temp }}/wasi-sdk-34.0-x86_64-linux
+        run: python scripts/build.py --package --test
+      - uses: actions/upload-artifact@v4
+        with:
+          name: renpy-extension
+          path: |
+            dist/renpy-extension.tar.gz
+            dist/SHA256SUMS.json

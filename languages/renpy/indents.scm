@@ -1,17 +1,7 @@
-; Indentation queries — marks nodes that increase indent level.
-(label (block) @end) @indent
-(screen (block) @end) @indent
-(init (block) @end) @indent
-(python_block (block) @end) @indent
-(if_statement (block) @end) @indent
-(elif_clause (block) @end) @indent
-(else_clause (block) @end) @indent
-(while_statement (block) @end) @indent
-(for_statement (block) @end) @indent
-(menu (block) @end) @indent
-(menu_choice (block) @end) @indent
-(transform (block) @end) @indent
-(style (block) @end) @indent
-(image (block) @end) @indent
-(translate (block) @end) @indent
-(camera (block) @end) @indent
+; Capture the body as the indent range and move its start back to the colon.
+; Capturing a body as @end would stop at its first line, losing nested indentation.
+(_ ":" @start
+   [(block) (indented_block) (element_block) (atl_block) (translate_strings_block)] @indent)
+
+; Menus have inline children rather than a separate body node.
+(menu_statement) @indent

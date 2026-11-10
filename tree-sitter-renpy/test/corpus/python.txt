@@ -1,41 +1,38 @@
-================
-Init python block
-================
+==================
+Python block and one-line statement
+==================
+
+define e = Character("Eileen")
+default points = 0
 
 init python:
-    x = 1
+    def add(value):
+        return value + 1
+
+label start:
+    $ points = add(points)
+    return
 
 ---
 
 (source_file
-  (init
+  (define_statement
+    (variable_name
+      (identifier))
+    (python_content))
+  (default_statement
+    (variable_name
+      (identifier))
+    (python_content))
+  (init_statement
+    (indented_block
+      (python_content)
+      (python_content)))
+  (label_statement
+    (label_name
+      (dotted_name
+        (identifier)))
     (block
-      (body_line))))
-
-================
-Python block
-================
-
-python:
-    def hello():
-        return "world"
-
----
-
-(source_file
-  (python_block
-    (block
-      (body_line)
-      (body_line))))
-
-================
-One-line python
-================
-
-$ x = 1
-
----
-
-(source_file
-  (one_line_python
-    (expression)))
+      (python_line
+        (python_content))
+      (return_statement))))

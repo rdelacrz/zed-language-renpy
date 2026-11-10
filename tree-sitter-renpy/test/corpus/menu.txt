@@ -1,0 +1,36 @@
+==================
+Menu with a condition and jump
+==================
+
+label start:
+    menu:
+        "What now?"
+
+        "Shop" if gold > 5:
+            jump shop
+        "Leave":
+            return
+
+---
+
+(source_file
+  (label_statement
+    (label_name
+      (dotted_name
+        (identifier)))
+    (block
+      (menu_statement
+        (say_statement
+          (string))
+        (menu_choice
+          (string)
+          (python_expression)
+          (block
+            (jump_statement
+              (label_name
+                (dotted_name
+                  (identifier))))))
+        (menu_choice
+          (string)
+          (block
+            (return_statement)))))))

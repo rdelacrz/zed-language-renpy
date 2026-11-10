@@ -37,12 +37,12 @@
   },
   "Init Block": {
     "prefix": "init",
-    "body": "init ${1:#priority number}:\n\t${2:}",
+    "body": "init ${1:0}:\n\t${2:}",
     "description": "Run code at initialization time."
   },
   "Init with Python Block": {
     "prefix": "inipy",
-    "body": "init ${1:#priority number} python:\n\t${2:}",
+    "body": "init ${1:0} python:\n\t${2:}",
     "description": "init block with a Python block"
   },
   "Create a Character": {
@@ -67,12 +67,12 @@
   },
   "Variable(Create/Modify)": {
     "prefix": "var",
-    "body": "$ ${1:variable_name} = ${2:# variable value}",
+    "body": "$ ${1:variable_name} = ${2:None}",
     "description": "Create/Modify variable."
   },
   "Variable(Create/Modify) ": {
     "prefix": "$",
-    "body": "$ ${1:variable_name} = ${2:# variable value}",
+    "body": "$ ${1:variable_name} = ${2:None}",
     "description": "Create/Modify variable."
   },
   "Renpy Pause": {
@@ -87,7 +87,7 @@
   },
   "Save Persistent": {
     "prefix": "persist",
-    "body": "$ persistent.${1:attribute_name} = ${2:# variable value}",
+    "body": "$ persistent.${1:attribute_name} = ${2:None}",
     "description": "Save Persistent."
   },
   "Save MultiPersistent": {

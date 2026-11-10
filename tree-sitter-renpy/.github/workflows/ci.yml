@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  grammar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - uses: astral-sh/setup-uv@v7
+
+      - name: Check C formatting
+        run: uvx --from clang-format==22.1.8 clang-format --dry-run --Werror src/scanner.c
+
+      - name: Compile the scanner with strict warnings
+        run: >
+          clang -fsyntax-only -Isrc -std=c11
+          -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow -Werror
+          src/scanner.c
+
+      - name: Check the scanner includes
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-tidy
+          clang-tidy src/scanner.c -- -Isrc -std=c11
+
+      - name: Install tree-sitter CLI
+        run: npm install --global tree-sitter-cli@0.25.10
+
+      - name: Regenerate parser
+        run: tree-sitter generate
+
+      - name: Check generated files are committed
+        run: git diff --exit-code -- src
+
+      - name: Run corpus tests
+        run: tree-sitter test
+
+      - name: Parse the smoke fixture
+        run: tree-sitter parse examples/smoke.rpy

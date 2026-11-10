@@ -1,0 +1,10 @@
+[workspace]
+
+[package]
+name = "renpy-wasm-smoke"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+tree-sitter = { version = "=0.25.10", features = ["wasm"] }

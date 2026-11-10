@@ -41,8 +41,9 @@
   enabling semantic-only highlighting to lose the working Tree-sitter colors.
 - No invented download URL: upstream has no binary releases. Build the pinned
   server locally, with a settings fragment generated for its actual path.
-- Preserve server patches in the parent repository so another clone can build
-  the same result without an unpushed submodule commit.
+- Publish server fixes in the server repository before updating the parent
+  submodule pin. The build helper verifies the pinned revision and no longer
+  applies a compatibility patch.
 
 ## Authoritative references consulted
 
@@ -52,7 +53,7 @@
 - [Manifest schema](https://github.com/zed-industries/zed/blob/main/crates/extension/src/extension_manifest.rs)
 - [Zed extension builder: Rust/WASI and grammar compilation](https://github.com/zed-industries/zed/blob/main/crates/extension/src/extension_builder.rs)
 - [Grammar source](https://github.com/rockettap/renpy-tree-sitter/tree/0e9ea0d0dcb8860ea1d5f3ac6356855bf58cc556)
-- [Native language server](https://github.com/rdelacrz/renpy-lsp-server/tree/1b5fcfb96be66b1d7b9d0e034e02e243a9245832)
+- [Native language server](https://github.com/rdelacrz/renpy-lsp-server/tree/91d66e0c96a90674d817907cffd2e189cf02969a)
 - [Official Ren'Py example](https://github.com/renpy/renpy/tree/ac8054a5c326011529894c0fc6e8fc8fff294ea2/the_question/game)
 - [LSP specification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/)
 

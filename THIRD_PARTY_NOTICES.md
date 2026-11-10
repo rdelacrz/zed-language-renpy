@@ -22,10 +22,10 @@ that extension is included here.
 
 `server/` is the existing
 [rdelacrz/renpy-lsp-server](https://github.com/rdelacrz/renpy-lsp-server)
-submodule at **1b5fcfb96be66b1d7b9d0e034e02e243a9245832**.
-`patches/renpy-lsp-server.patch` carries this integration's local fixes so a
-fresh clone can reproduce them without needing an unpublished submodule
-commit. The server's README describes its embedded Ren'Py API data sources.
+submodule at **91d66e0c96a90674d817907cffd2e189cf02969a**. This published commit
+includes the integration fixes previously carried as a local compatibility
+patch. Fresh clones use the server directly without applying patches.
+The server's README describes its embedded Ren'Py API data sources.
 
 This notice does not assign a license to the original extension/server.
 Their repository owner should choose/confirm licenses and audit the inherited

@@ -1,4 +1,2 @@
 # Preserve the pinned upstream snapshot byte-for-byte, including its whitespace.
 tree-sitter-renpy/** linguist-vendored -whitespace
-# Diff context includes upstream whitespace by design.
-patches/*.patch -whitespace

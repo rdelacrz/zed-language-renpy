@@ -15,9 +15,11 @@ cd zed-language-renpy
 python3 scripts/build.py
 ```
 
-For an existing checkout, just run the last command. It initializes the server
-submodule if necessary, applies the checked-in compatibility patch, builds the
-native server and the WASI extension, and writes **`target/zed-settings.json`**.
+After pulling updates to an existing checkout, run
+`git submodule update --init --recursive` before building (commit or stash any
+local server edits first). The build helper initializes the server submodule if
+necessary, verifies the published pinned revision, builds the native server and
+the WASI extension, and writes **`target/zed-settings.json`**.
 It does **not** change your global PATH or overwrite your Zed settings.
 
 1. Open Zed's settings and **merge** `target/zed-settings.json` into them. It
@@ -115,7 +117,6 @@ parsing. See [docs/verification.md](docs/verification.md) for the verified scope
 | `languages/renpy/` | Language metadata and seven Tree-sitter query files |
 | `tree-sitter-renpy/` | Vendored, pinned upstream grammar with external indentation scanner |
 | `server/` | Pinned upstream Rust LSP submodule |
-| `patches/renpy-lsp-server.patch` | Local server fixes, applied idempotently by the build helper |
 | `tests/` | Native parser, WASM parser, and real LSP regression tests |
 | `docs/zed-integration.md` | Research findings, architecture, and source links |
 
@@ -125,11 +126,11 @@ parser, publish a grammar commit and update `rev`, or temporarily use a local
 Git `file://` URL and committed revision for dev installation. Regenerate and
 commit `src/parser.c`, `src/grammar.json`, and `src/node-types.json` together.
 
-Server changes are intentionally not an unpublished gitlink commit. After
-editing the submodule, regenerate its patch with
-`git -C server diff --binary > patches/renpy-lsp-server.patch`. Commit the patch
-with the parent extension changes; keep the server gitlink at the documented
-base until the fixes are published upstream.
+The server fixes are published in `renpy-lsp-server` and included in the pinned
+submodule revision; no compatibility patch is needed. For future server changes,
+commit and push the server repository first, then update both the parent
+repository's `server` gitlink and `SERVER_REV` in `scripts/build.py`. This keeps
+fresh clones reproducible without pointing at unpublished commits.
 
 ## Limits and troubleshooting
 

@@ -14,14 +14,14 @@ python3 scripts/test-official-examples.py
 | Check | Result |
 | --- | --- |
 | Extension command/settings Rust tests | 4 passed |
-| Patched native language-server Rust tests | 73 passed |
+| Native language-server Rust tests | 73 passed |
 | Upstream grammar corpus | 5 passed |
 | Native parser/query and real stdio LSP regression tests | 19 passed |
 | Exact grammar WASM loaded in Tree-sitter/Wasmtime | Passed; `language.is_wasm()` asserted |
 | Local/example fixture WASM parses | 3 passed |
 | All Zed query files compiled against the WASM language | 7 passed |
 | Official Ren'Py “The Question” scripts | 5 passed in WASM |
-| Clean server checkout + compatibility patch | Applies; second application safely recognized |
+| Clean server checkout | Published pinned revision; no compatibility patch required |
 | Generated source snapshot | Matches pinned upstream grammar |
 | Extension WASI Preview 2 release build | Passed |
 | Native Linux AArch64 server release build | Passed |
@@ -65,8 +65,9 @@ and configuration directories under Xvfb. It failed before a window opened:
 Therefore this record does **not** claim a successful Zed dev-install UI run,
 visual highlighting review, interactive indentation/completion check, or
 marketplace installation. Those need a functioning desktop session.
-Windows/macOS builds and hosted CI execution have not been run here. CI
-configuration is included, but no remote workflow or publication was triggered.
+Windows/macOS builds have not been exercised locally. The results above are
+local verification, not a claim about hosted CI results. No marketplace
+publication is included.
 
 ### Desktop acceptance checklist
 

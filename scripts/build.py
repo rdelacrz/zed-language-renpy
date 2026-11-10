@@ -12,7 +12,7 @@ import tarfile
 import tomllib
 
 ROOT = Path(__file__).resolve().parents[1]
-SERVER_REV = "1b5fcfb96be66b1d7b9d0e034e02e243a9245832"
+SERVER_REV = "91d66e0c96a90674d817907cffd2e189cf02969a"
 
 
 def run(*args, cwd=ROOT, **kwargs):
@@ -20,20 +20,14 @@ def run(*args, cwd=ROOT, **kwargs):
     return subprocess.run(list(map(str, args)), cwd=cwd, check=True, **kwargs)
 
 
-def apply_server_patch():
+def prepare_server():
     if not (ROOT / "server/Cargo.toml").is_file():
         run("git", "submodule", "update", "--init", "--recursive")
     revision = run("git", "rev-parse", "HEAD", cwd=ROOT / "server", capture_output=True, text=True).stdout.strip()
     if revision != SERVER_REV:
-        raise RuntimeError(f"server is at {revision}, expected {SERVER_REV}; refusing to reset local work")
-    patch = ROOT / "patches/renpy-lsp-server.patch"
-    reverse = subprocess.run(["git", "apply", "--reverse", "--check", str(patch)],
-                             cwd=ROOT / "server", capture_output=True)
-    if reverse.returncode == 0:
-        print("Server compatibility patch already applied.")
-    else:
-        run("git", "apply", "--check", patch, cwd=ROOT / "server")
-        run("git", "apply", patch, cwd=ROOT / "server")
+        raise RuntimeError(f"server is at {revision}, expected {SERVER_REV}; refusing to reset local work. "
+                           "Commit or stash server edits, then run `git submodule update --init --recursive`.")
+    print(f"Using published server revision {revision}; no patch required.")
 
 
 def build_grammar():
@@ -87,7 +81,7 @@ def main():
         os.environ["PATH"] = str(cargo_home / "bin") + os.pathsep + os.environ.get("PATH", "")
     if not shutil.which("cargo"):
         raise RuntimeError("Install Rust with rustup: https://rustup.rs")
-    apply_server_patch()
+    prepare_server()
     run("rustup", "target", "add", "wasm32-wasip2")
     run("cargo", "build", "--locked", "--release", "--manifest-path", "server/Cargo.toml",
         "--target-dir", ROOT / "server/target")

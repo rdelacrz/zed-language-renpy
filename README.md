@@ -109,6 +109,12 @@ Wasmtime runtime. The WASM harness asserts `language.is_wasm()` and rejects an
 invalid module, rather than relying on a CLI flag that may fall back to native
 parsing. See [docs/verification.md](docs/verification.md) for the verified scope.
 
+For interactive tests without a physical monitor, use the isolated software
+Vulkan launcher and GUI test driver described in
+[docs/gui-verification.md](docs/gui-verification.md). Zed's dev installer and
+nine editor checks have passed on Linux AArch64 under Xvfb/Openbox. Screenshots,
+OCR transcripts, and actual Zed/LSP traffic are saved as verification artifacts.
+
 ## Source layout and reproducibility
 
 | Path | Purpose |
@@ -148,8 +154,9 @@ fresh clones reproducible without pointing at unpublished commits.
   server currently uses its built-in diagnostics defaults.
 - If the LSP is missing, verify the generated binary path and restart language
   servers. Inspect **zed: open log** or launch `zed --foreground`.
-- This machine could not create a Zed window under Xvfb; interactive highlighting,
-  completion UI, and dev-install UI remain a manual smoke check on a desktop.
+- GUI verification uses process-scoped Mesa lavapipe overrides, not the host's
+  proprietary Mali driver. It validates editor behavior, not physical-GPU
+  performance or Windows/macOS compatibility.
 - Nothing is committed, pushed, globally installed, or published by the helper.
   Confirm extension/server licensing and inherited data/snippet attribution
   before publication; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

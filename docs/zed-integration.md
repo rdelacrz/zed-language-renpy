@@ -21,6 +21,10 @@
 5. Tree-sitter queries independently power highlights, outlines, indentation,
    injections, brackets, scopes, and text objects. A query containing a stale
    node name can fail entirely even when the Rust extension builds.
+6. Snippet files match the lowercase language display name, including punctuation:
+   `Ren'Py` needs `ren'py.json`. Literal dollars must be escaped in snippet bodies;
+   otherwise Zed interprets them as tabstop starts. Loading the extension in the
+   actual GUI exposed both issues, now covered by regression tests.
 
 ## Decisions
 
@@ -49,6 +53,7 @@
 
 - [Zed extension development](https://zed.dev/docs/extensions/developing-extensions)
 - [Zed language extensions and query captures](https://zed.dev/docs/extensions/languages)
+- [Zed snippet extension filename rules](https://zed.dev/docs/extensions/snippets)
 - [Extension API and Zed compatibility](https://github.com/zed-industries/zed/tree/main/crates/extension_api)
 - [Manifest schema](https://github.com/zed-industries/zed/blob/main/crates/extension/src/extension_manifest.rs)
 - [Zed extension builder: Rust/WASI and grammar compilation](https://github.com/zed-industries/zed/blob/main/crates/extension/src/extension_builder.rs)

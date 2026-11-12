@@ -16,7 +16,7 @@ python3 scripts/test-official-examples.py
 | Extension command/settings Rust tests | 4 passed |
 | Native language-server Rust tests | 73 passed |
 | Upstream grammar corpus | 5 passed |
-| Native parser/query and real stdio LSP regression tests | 19 passed |
+| Native parser/query, stdio LSP, and snippet regression tests | 21 passed |
 | Exact grammar WASM loaded in Tree-sitter/Wasmtime | Passed; `language.is_wasm()` asserted |
 | Local/example fixture WASM parses | 3 passed |
 | All Zed query files compiled against the WASM language | 7 passed |
@@ -25,6 +25,9 @@ python3 scripts/test-official-examples.py
 | Generated source snapshot | Matches pinned upstream grammar |
 | Extension WASI Preview 2 release build | Passed |
 | Native Linux AArch64 server release build | Passed |
+| Dev extension installed through Zed's GUI | Passed |
+| Interactive GUI feature checks in a fresh isolated profile | 9 passed |
+| Stdio LSP suite through the transparent GUI-test recorder | 11 passed |
 
 The official example test downloads `gui.rpy`, `options.rpy`, `screens.rpy`,
 `script.rpy`, and `testcases.rpy` at Ren'Py revision
@@ -55,21 +58,34 @@ or test failures. Its diagnostic/parser limitations are documented in README.
 The archive contains extension code, grammar, queries, configuration, snippets,
 and third-party notices. It does not bundle a platform-specific language server.
 
-## Not verified interactively
+## GUI verification
 
-A downloaded Zed v1.27.0 Linux AArch64 binary was launched with isolated data
-and configuration directories under Xvfb. It failed before a window opened:
+Zed v1.27.0 Linux AArch64 now renders successfully on a private Xvfb/Openbox
+desktop using Mesa lavapipe (software Vulkan). The original X11 failure was
+preceded by a Mali Vulkan surface failure and an EGL fallback failure. Scoped
+driver/library overrides fixed rendering without changing the host's real
+desktop or system graphics configuration.
 
-> X11 connection: Unsupported extension
+The dev extension was installed through Zed's GUI. Actual keyboard/clipboard
+input, screenshots/OCR, saved files, and Zed-originated LSP traffic verify syntax
+colors, outline, unopened-file definition navigation, API and nested API
+completion, hover, indentation/brackets, snippet expansion, and diagnostics
+appearing and clearing. All nine checks also passed in one uninterrupted run
+in a fresh profile using the rebuilt extension payload.
 
-Therefore this record does **not** claim a successful Zed dev-install UI run,
-visual highlighting review, interactive indentation/completion check, or
-marketplace installation. Those need a functioning desktop session.
-Windows/macOS builds have not been exercised locally. The results above are
-local verification, not a claim about hosted CI results. No marketplace
-publication is included.
+The GUI uncovered two snippet bugs missed by the original tests: unescaped
+literal dollars and a filename that did not match the lowercase `Ren'Py`
+display name. Both are fixed and covered by regression tests.
 
-### Desktop acceptance checklist
+See [gui-verification.md](gui-verification.md) for root-cause evidence and the
+reusable launcher/test commands. Evidence is retained under
+`target/gui-verification/clean/` (report, screenshots, OCR), with Zed logs and
+actual LSP traces alongside it in `target/gui-verification/`.
+
+Physical-GPU performance, Windows/macOS, other display backends, and marketplace
+installation remain unverified. These are local results, not hosted CI results.
+
+### Desktop acceptance checklist exercised
 
 1. Merge `target/zed-settings.json` into Zed settings.
 2. Run **zed: install dev extension** and select the repository root.
@@ -77,6 +93,6 @@ publication is included.
 4. Check nested dialogue/menu/screen/ATL highlights and the outline.
 5. Type `$ renpy.` / `$ renpy.music.`; inspect completion and hover.
 6. Go to definition on `chapter_two` without first opening its file.
-7. Enter a tab-indented line and check the diagnostic; fix it and confirm it clears.
+7. Enter an invalid variable name and check the diagnostic; fix it and confirm it clears.
 8. Test Enter after a colon, bracket pairing, and snippets in the editor.
 9. Inspect **zed: open log** for grammar/query/server errors.

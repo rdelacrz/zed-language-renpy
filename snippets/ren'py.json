@@ -27,7 +27,7 @@
   },
   "One Line Python": {
     "prefix": "p1",
-    "body": "$ ${1:#python statements}",
+    "body": "\\$ ${1:#python statements}",
     "description": "Execute a single line of Python."
   },
   "Python in Block": {
@@ -67,32 +67,32 @@
   },
   "Variable(Create/Modify)": {
     "prefix": "var",
-    "body": "$ ${1:variable_name} = ${2:None}",
+    "body": "\\$ ${1:variable_name} = ${2:None}",
     "description": "Create/Modify variable."
   },
   "Variable(Create/Modify) ": {
     "prefix": "$",
-    "body": "$ ${1:variable_name} = ${2:None}",
+    "body": "\\$ ${1:variable_name} = ${2:None}",
     "description": "Create/Modify variable."
   },
   "Renpy Pause": {
     "prefix": "rpause",
-    "body": "$ renpy.pause($1)\n$2",
+    "body": "\\$ renpy.pause($1)\n$2",
     "description": "Ren'Py pause."
   },
   "Movie Cutscene": {
     "prefix": "cutscene",
-    "body": "$ renpy.movie_cutscene('${1:file_name.extension}')",
+    "body": "\\$ renpy.movie_cutscene('${1:file_name.extension}')",
     "description": "Movie Cutscene"
   },
   "Save Persistent": {
     "prefix": "persist",
-    "body": "$ persistent.${1:attribute_name} = ${2:None}",
+    "body": "\\$ persistent.${1:attribute_name} = ${2:None}",
     "description": "Save Persistent."
   },
   "Save MultiPersistent": {
     "prefix": "multisave",
-    "body": "$ ${1:persistent_name}.save()",
+    "body": "\\$ ${1:persistent_name}.save()",
     "description": "Save MultiPersistent"
   },
   "Fade": {

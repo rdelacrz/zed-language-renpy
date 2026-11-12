@@ -1,0 +1,2 @@
+# Optional dependencies for scripts/test-zed-gui.py (not needed for normal builds).
+pillow==12.0.0

@@ -5,7 +5,7 @@ version = "0.1.0"
 schema_version = 1
 authors = ["rdelacrz"]
 repository = "https://github.com/rdelacrz/zed-language-renpy"
-snippets = ["./snippets/renpy.json"]
+snippets = ["./snippets/ren'py.json"]
 
 [language_servers.renpy-language-server]
 name = "Ren'Py Language Server"
